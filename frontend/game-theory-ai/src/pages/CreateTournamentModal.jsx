@@ -16,7 +16,8 @@ import {
 const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
   const [tournamentName, setTournamentName] = useState('');
 
-  const handleCreate = () => {
+  const handleCreate = (event) => {
+    event.preventDefault(); // Prevent the default form submit action
     if (tournamentName.trim()) {
       onAddTournament(tournamentName);
       setTournamentName('');
@@ -27,20 +28,25 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent as="form" onSubmit={handleCreate}>
         <ModalHeader>Create a New Tournament</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
             <FormLabel>Tournament Name</FormLabel>
-            <Input value={tournamentName} onChange={(e) => setTournamentName(e.target.value)} placeholder="Enter tournament name" autoFocus />
+            <Input
+              value={tournamentName}
+              onChange={(e) => setTournamentName(e.target.value)}
+              placeholder="Enter tournament name"
+              autoFocus
+            />
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleCreate}>
+          <Button type="submit" colorScheme="teal" mr={3}>
             Create
           </Button>
-          <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
