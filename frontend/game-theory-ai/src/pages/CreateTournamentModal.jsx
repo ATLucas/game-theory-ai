@@ -28,7 +28,7 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent as="form" onSubmit={handleCreate}>
+      <ModalContent as='form' onSubmit={handleCreate}>
         <ModalHeader>Create a New Tournament</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -37,16 +37,16 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
             <Input
               value={tournamentName}
               onChange={(e) => setTournamentName(e.target.value)}
-              placeholder="Enter tournament name"
+              placeholder='Enter tournament name'
               autoFocus
             />
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button type="submit" colorScheme="teal" mr={3}>
+          <Button type='submit' colorScheme='teal' mr={3}>
             Create
           </Button>
-          <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button type='button' variant='ghost' onClick={onClose}>Cancel</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -25,13 +25,13 @@ const TournamentChooser = () => {
   };
 
   return (
-    <VStack spacing={4} height="95%" justifyContent="space-between">
+    <VStack spacing='10' padding='10vh 40vh' height='95%' width='100%' justifyContent='space-between'>
       {selectedTournament ? (
         <TournamentDetails tournament={selectedTournament} onBack={handleBack} />
       ) : (
         <>
           <TournamentSelectionTable tournaments={tournaments} onTournamentSelect={selectTournament} />
-          <Button leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen} size="lg">
+          <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onOpen} size='lg'>
             Add Tournament
           </Button>
           <CreateTournamentModal isOpen={isOpen} onClose={onClose} onAddTournament={addTournament} />
