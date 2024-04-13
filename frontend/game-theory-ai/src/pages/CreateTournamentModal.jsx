@@ -16,7 +16,7 @@ import { TOUR_STYLES } from '../common/tournamentStyles';
 const DEFAULT_RULESET_NAME = Object.keys(TOUR_RULESETS)[0];
 const DEFAULT_STYLE_NAME = Object.keys(TOUR_STYLES)[0];
 
-const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
+const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTournament }) => {
   const [tournamentName, setTournamentName] = useState('');
   const [ruleset, setRuleset] = useState(DEFAULT_RULESET_NAME);
   const [style, setStyle] = useState(DEFAULT_STYLE_NAME);
@@ -33,7 +33,7 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
     // Prevent the default form submit action
     event.preventDefault();
     if (validateForm()) {
-      onAddTournament(tournamentName, ruleset, style, styleParams);
+      onAddTournament(tournamentName.trim(), ruleset, style, styleParams);
       resetForm();
     }
   };
@@ -47,14 +47,23 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
     onClose();
   };
 
+  const handleTournamentNameChange = (value) => {
+    setTournamentName(value);
+    updateErrors(value, "tournamentName");
+  };
+
   const handleParamChange = (paramName, value) => {
     setStyleParams(prev => ({ ...prev, [paramName]: value }));
-    if (value.trim() === '') {
-      setErrors(prev => ({ ...prev, [paramName]: 'This field is required' }));
+    updateErrors(value, paramName);
+  };
+
+  const updateErrors = (fieldValue, fieldName) => {
+    if (fieldValue.trim() === '') {
+      setErrors(prev => ({ ...prev, [fieldName]: 'This field is required' }));
     } else {
       setErrors(prev => {
         const newErrors = { ...prev };
-        delete newErrors[paramName];
+        delete newErrors[fieldName];
         return newErrors;
       });
     }
@@ -62,6 +71,18 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
 
   const validateForm = () => {
     const newErrors = {};
+
+    // Check for empty name
+    if (tournamentName.trim() === '') {
+      newErrors.tournamentName = 'Tournament name must be specified';
+    }
+
+    // Check for unique name
+    if (existingTournaments.some((tournament) => tournament.name === tournamentName.trim())) {
+      newErrors.tournamentName = 'Tournament name must be unique';
+    }
+
+    // Check for required style parameters
     Object.keys(TOUR_STYLES[style]).forEach(paramName => {
       const { paramName: paramKey } = TOUR_STYLES[style][paramName];
       if (!styleParams[paramKey] || styleParams[paramKey].trim() === '') {
@@ -89,7 +110,7 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
         {Object.keys(params).map(paramName => {
           const { paramName: paramKey, paramType } = params[paramName];
           return (
-            <FormControl key={paramKey} mt={4} isInvalid={errors[paramKey]}>
+            <FormControl key={paramKey} mt={4} isInvalid={!!errors[paramKey]}>
               <FormLabel>{paramName}</FormLabel>
               <NumberInput 
                 value={styleParams[paramKey] || ''} 
@@ -115,14 +136,15 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
         <ModalHeader>Create a New Tournament</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <FormControl isInvalid={errors.tournamentName}>
+          <FormControl isInvalid={!!errors.tournamentName}>
             <FormLabel>Tournament Name</FormLabel>
             <Input
               value={tournamentName}
-              onChange={(e) => setTournamentName(e.target.value)}
+              onChange={(e) => handleTournamentNameChange(e.target.value)}
               placeholder='Enter tournament name'
               autoFocus
             />
+            {errors.tournamentName && <p style={{ color: 'red' }}>{errors.tournamentName}</p>}
           </FormControl>
           <FormControl mt={4}>
             <FormLabel>Ruleset</FormLabel>

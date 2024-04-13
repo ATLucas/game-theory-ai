@@ -57,7 +57,12 @@ const TournamentChooser = () => {
           <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onOpen} size='lg'>
             Add Tournament
           </Button>
-          <CreateTournamentModal isOpen={isOpen} onClose={onClose} onAddTournament={addTournament} />
+          <CreateTournamentModal
+            existingTournaments={tournaments}
+            isOpen={isOpen}
+            onClose={onClose}
+            onAddTournament={addTournament}
+          />
           <DeleteTournamentModal
             isOpen={isDeleteModalOpen}
             onClose={() => setDeleteModalOpen(false)}
