@@ -38,7 +38,11 @@ const App = () => {
       <Box padding='5vh 20vw' height='95%' width='100%' justifyContent='space-between'>
         {
           selectedTournament ? (
-            <TournamentDetails tournament={selectedTournament} onBack={() => setSelectedTournament(null)} />
+            <TournamentDetails
+              tournament={selectedTournament}
+              tournamentConfig={tournaments[selectedTournament]}
+              onBack={() => setSelectedTournament(null)}
+            />
           ) : (
             <TournamentChooser
               tournaments={tournaments}

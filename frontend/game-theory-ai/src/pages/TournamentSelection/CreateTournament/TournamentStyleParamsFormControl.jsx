@@ -15,7 +15,7 @@ const TournamentStyleParamsFormControl = ({
   errors,
   updateErrors,
 }) => {
-  const paramsConfig = TOUR_STYLES[tournamentStyle];
+  const paramsConfig = TOUR_STYLES[tournamentStyle]?.global;
   
   // Check if there are parameters to display
   if (Object.keys(paramsConfig).length === 0) {

@@ -4,7 +4,7 @@ import React from 'react';
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
-const TournamentDetails = ({ tournament, onBack }) => {
+const TournamentDetails = ({ tournament, tournamentConfig, onBack }) => {
   return (
     <Flex direction='column' height='100%' width='100%'>
       <Box p='10px'>
