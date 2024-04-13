@@ -10,8 +10,8 @@ import {
 } from '@chakra-ui/react';
 
 // Internal
-import { TOUR_RULESETS } from '../common/tournamentRulesets';
-import { TOUR_STYLES } from '../common/tournamentStyles';
+import { TOUR_RULESETS } from '../../common/tournamentRulesets';
+import { TOUR_STYLES } from '../../common/tournamentStyles';
 
 const DEFAULT_RULESET_NAME = Object.keys(TOUR_RULESETS)[0];
 const DEFAULT_STYLE_NAME = Object.keys(TOUR_STYLES)[0];

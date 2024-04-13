@@ -7,8 +7,8 @@ import {
 } from '@chakra-ui/react';
 
 // Internal
-import TournamentChooser from './pages/TournamentChooser';
-import TournamentDetails from './pages/TournamentDetails';
+import TournamentChooser from './pages/TournamentSelection/TournamentChooser';
+import TournamentDetails from './pages/TournamentDetails/TournamentDetails';
 
 const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
