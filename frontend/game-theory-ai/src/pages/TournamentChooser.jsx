@@ -12,8 +12,8 @@ const TournamentChooser = () => {
   const [tournaments, setTournaments] = useState([]);
   const [selectedTournament, setSelectedTournament] = useState(null);
 
-  const addTournament = (name) => {
-    setTournaments([...tournaments, name]);
+  const addTournament = (name, ruleset) => {
+    setTournaments([...tournaments, { name, ruleset }]);
   };
 
   const selectTournament = (name) => {
@@ -21,11 +21,12 @@ const TournamentChooser = () => {
   };
 
   const handleBack = () => {
-    setSelectedTournament(null); // Reset the selection to show the tournament list
+    // Reset the selection to show the tournament list
+    setSelectedTournament(null);
   };
 
   return (
-    <VStack spacing='10' padding='10vh 40vh' height='95%' width='100%' justifyContent='space-between'>
+    <VStack spacing='10' padding='10vh 20vw' height='95%' width='100%' justifyContent='space-between'>
       {selectedTournament ? (
         <TournamentDetails tournament={selectedTournament} onBack={handleBack} />
       ) : (

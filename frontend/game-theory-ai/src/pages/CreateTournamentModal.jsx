@@ -1,6 +1,12 @@
+// pages/CreateTournamentModal.jsx
+
+// External
 import React, { useState } from 'react';
 import {
   Button,
+  FormControl,
+  FormLabel,
+  Input,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -8,19 +14,26 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  FormControl,
-  FormLabel,
-  Input
+  Select,
 } from '@chakra-ui/react';
+
+// Internal
+import { RULESETS } from '../common/rulesets';
+
+const DEFAULT_RULESET_NAME = Object.keys(RULESETS)[0];
 
 const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
   const [tournamentName, setTournamentName] = useState('');
+  const [ruleset, setRuleset] = useState(DEFAULT_RULESET_NAME);
 
   const handleCreate = (event) => {
     event.preventDefault(); // Prevent the default form submit action
     if (tournamentName.trim()) {
-      onAddTournament(tournamentName);
+      // Add the new tournament
+      onAddTournament(tournamentName, ruleset);
+      // Reset to defaults
       setTournamentName('');
+      setRuleset(DEFAULT_RULESET_NAME);
       onClose();
     }
   };
@@ -40,6 +53,14 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
               placeholder='Enter tournament name'
               autoFocus
             />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>Ruleset</FormLabel>
+            <Select value={ruleset} onChange={(e) => setRuleset(e.target.value)}>
+              {Object.keys(RULESETS).map((key) => (
+                <option key={key} value={key}>{key}</option>
+              ))}
+            </Select>
           </FormControl>
         </ModalBody>
         <ModalFooter>

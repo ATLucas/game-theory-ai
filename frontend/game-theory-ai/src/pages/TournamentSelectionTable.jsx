@@ -21,16 +21,18 @@ const TournamentSelectionTable = ({ tournaments, onTournamentSelect }) => {
         <Thead>
           <Tr>
             <Th>Tournament Name</Th>
+            <Th>Tournament Ruleset</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {tournaments.map((name, index) => (
+          {tournaments.map(({ name, ruleset }, index) => (
             <Tr
               key={index}
               _hover={{ bg: selectionHoverColor, cursor: 'pointer' }}
               onClick={() => onTournamentSelect(name)}
             >
               <Td>{name}</Td>
+              <Td>{ruleset}</Td>
             </Tr>
           ))}
         </Tbody>
