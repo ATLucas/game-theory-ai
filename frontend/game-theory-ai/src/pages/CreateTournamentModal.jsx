@@ -3,7 +3,7 @@
 // External
 import React, { useEffect, useState } from 'react';
 import {
-  Button, FormControl, FormLabel, Input,
+  Box, Button, FormControl, FormLabel, Input,
   Modal, ModalOverlay, ModalContent, ModalHeader,
   ModalCloseButton, ModalBody, ModalFooter,
   NumberInput, NumberInputField, Select,
@@ -21,50 +21,91 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
   const [ruleset, setRuleset] = useState(DEFAULT_RULESET_NAME);
   const [style, setStyle] = useState(DEFAULT_STYLE_NAME);
   const [styleParams, setStyleParams] = useState({});
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     // Reset style parameters when the style changes
     setStyleParams({});
+    setErrors({});
   }, [style]);
 
   const handleCreate = (event) => {
     // Prevent the default form submit action
     event.preventDefault();
-    if (tournamentName.trim()) {
-      // Add the new tournament
+    if (validateForm()) {
       onAddTournament(tournamentName, ruleset, style);
-      // Reset to defaults
-      setTournamentName('');
-      setRuleset(DEFAULT_RULESET_NAME);
-      setStyle(DEFAULT_STYLE_NAME);
-      setStyleParams({});
-      onClose();
+      resetForm();
     }
+  };
+
+  const resetForm = () => {
+    setTournamentName('');
+    setRuleset(DEFAULT_RULESET_NAME);
+    setStyle(DEFAULT_STYLE_NAME);
+    setStyleParams({});
+    setErrors({});
+    onClose();
   };
 
   const handleParamChange = (paramName, value) => {
     setStyleParams(prev => ({ ...prev, [paramName]: value }));
+    if (value.trim() === '') {
+      setErrors(prev => ({ ...prev, [paramName]: 'This field is required' }));
+    } else {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[paramName];
+        return newErrors;
+      });
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    Object.keys(TOUR_STYLES[style]).forEach(paramName => {
+      const { paramName: paramKey } = TOUR_STYLES[style][paramName];
+      if (!styleParams[paramKey] || styleParams[paramKey].trim() === '') {
+        newErrors[paramKey] = 'This field is required';
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const renderStyleParams = () => {
     const params = TOUR_STYLES[style];
-    return Object.keys(params).map(paramName => {
-      const { paramName: paramKey, paramType } = params[paramName];
-      return (
-        <FormControl key={paramKey} mt={4}>
-          <FormLabel>{paramName}</FormLabel>
-          <NumberInput 
-            value={styleParams[paramKey] || ''} 
-            onChange={(value) => handleParamChange(paramKey, value)}
-            min={paramType === 'int' ? 1 : 0.00}
-            step={paramType === 'int' ? 1 : 0.01}
-            precision={paramType === 'int' ? 0 : 1}
-          >
-            <NumberInputField />
-          </NumberInput>
+    
+    // Check if there are parameters to display
+    if (Object.keys(params).length === 0) {
+      return null; // Don't render anything if there are no parameters
+    }
+
+    return (
+      <Box border="1px solid gray" p={4} mt={4} borderRadius="md">
+        <FormControl>
+          <FormLabel as='legend'>Style Parameters</FormLabel>
         </FormControl>
-      );
-    });
+        {Object.keys(params).map(paramName => {
+          const { paramName: paramKey, paramType } = params[paramName];
+          return (
+            <FormControl key={paramKey} mt={4} isInvalid={errors[paramKey]}>
+              <FormLabel>{paramName}</FormLabel>
+              <NumberInput 
+                value={styleParams[paramKey] || ''} 
+                onChange={(value) => handleParamChange(paramKey, value)}
+                min={paramType === 'int' ? 1 : 0}
+                step={paramType === 'int' ? 1 : 0.1}
+                precision={paramType === 'int' ? 0 : 1}
+              >
+                <NumberInputField />
+              </NumberInput>
+              {errors[paramKey] && <p style={{ color: 'red' }}>{errors[paramKey]}</p>}
+            </FormControl>
+          );
+        })}
+      </Box>
+    );
   };
 
   return (
@@ -74,7 +115,7 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
         <ModalHeader>Create a New Tournament</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <FormControl>
+          <FormControl isInvalid={errors.tournamentName}>
             <FormLabel>Tournament Name</FormLabel>
             <Input
               value={tournamentName}
@@ -102,10 +143,10 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
           {renderStyleParams()}
         </ModalBody>
         <ModalFooter>
-          <Button type='submit' colorScheme='teal' mr={3}>
+          <Button type='submit' colorScheme='teal' mr={3} isDisabled={Object.keys(errors).length > 0}>
             Create
           </Button>
-          <Button type='button' variant='ghost' onClick={onClose}>Cancel</Button>
+          <Button type='button' variant='ghost' onClick={resetForm}>Cancel</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
