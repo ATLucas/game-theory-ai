@@ -25,20 +25,7 @@
 
 ## TODO
 
-- Choose ruleset for the tournament when creating it
-    - Reward cooperation: [1, 1], [1, 0], [0, 1], [0, 0]
-    - Reward defection: [0, 0], [0, 1], [1, 0], [1, 1]
-    - Reward mutual cooperation (1): [1, 1], [0, 1], [1, 0], [1, 1]
-    - Reward mutual cooperation (2): [2, 2], [0, 1], [1, 0], [1, 1]
-    - Reward exploitation: [2, 2], [0, 3], [3, 0], [1, 1]
-    - Prisoner's dilemma: [3, 3], [0, 5], [5, 0], [1, 1]
-- Choose tournament style
-    - round robin
-    - single elimination
-    - double elimination
-    - round robin + elim
-    - round robin + elim-2
-    - population round robin (% chance of playing inside vs outside the population)
+- Choose per-style parameters
 - PopulationSelector for each tournament, similar to TournamentSelector
 - StrategySelector for each population, similar to TournamentSelector
     - Tit for Tat

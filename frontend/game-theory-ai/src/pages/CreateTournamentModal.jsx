@@ -18,22 +18,27 @@ import {
 } from '@chakra-ui/react';
 
 // Internal
-import { RULESETS } from '../common/rulesets';
+import { TOUR_RULESETS } from '../common/tournamentRulesets';
+import { TOUR_STYLES } from '../common/tournamentStyles';
 
-const DEFAULT_RULESET_NAME = Object.keys(RULESETS)[0];
+const DEFAULT_RULESET_NAME = Object.keys(TOUR_RULESETS)[0];
+const DEFAULT_STYLE_NAME = Object.keys(TOUR_STYLES)[0];
 
 const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
   const [tournamentName, setTournamentName] = useState('');
   const [ruleset, setRuleset] = useState(DEFAULT_RULESET_NAME);
+  const [style, setStyle] = useState(DEFAULT_STYLE_NAME);
 
   const handleCreate = (event) => {
-    event.preventDefault(); // Prevent the default form submit action
+    // Prevent the default form submit action
+    event.preventDefault();
     if (tournamentName.trim()) {
       // Add the new tournament
-      onAddTournament(tournamentName, ruleset);
+      onAddTournament(tournamentName, ruleset, style);
       // Reset to defaults
       setTournamentName('');
       setRuleset(DEFAULT_RULESET_NAME);
+      setStyle(DEFAULT_STYLE_NAME);
       onClose();
     }
   };
@@ -57,7 +62,15 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
           <FormControl mt={4}>
             <FormLabel>Ruleset</FormLabel>
             <Select value={ruleset} onChange={(e) => setRuleset(e.target.value)}>
-              {Object.keys(RULESETS).map((key) => (
+              {Object.keys(TOUR_RULESETS).map((key) => (
+                <option key={key} value={key}>{key}</option>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>Style</FormLabel>
+            <Select value={style} onChange={(e) => setStyle(e.target.value)}>
+              {Object.keys(TOUR_STYLES).map((key) => (
                 <option key={key} value={key}>{key}</option>
               ))}
             </Select>

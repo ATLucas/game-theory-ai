@@ -12,8 +12,8 @@ const TournamentChooser = () => {
   const [tournaments, setTournaments] = useState([]);
   const [selectedTournament, setSelectedTournament] = useState(null);
 
-  const addTournament = (name, ruleset) => {
-    setTournaments([...tournaments, { name, ruleset }]);
+  const addTournament = (name, ruleset, style) => {
+    setTournaments([...tournaments, { name, ruleset, style }]);
   };
 
   const selectTournament = (name) => {

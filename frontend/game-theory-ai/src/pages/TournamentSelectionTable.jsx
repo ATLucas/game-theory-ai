@@ -22,10 +22,11 @@ const TournamentSelectionTable = ({ tournaments, onTournamentSelect }) => {
           <Tr>
             <Th>Tournament Name</Th>
             <Th>Tournament Ruleset</Th>
+            <Th>Tournament Style</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {tournaments.map(({ name, ruleset }, index) => (
+          {tournaments.map(({ name, ruleset, style }, index) => (
             <Tr
               key={index}
               _hover={{ bg: selectionHoverColor, cursor: 'pointer' }}
@@ -33,6 +34,7 @@ const TournamentSelectionTable = ({ tournaments, onTournamentSelect }) => {
             >
               <Td>{name}</Td>
               <Td>{ruleset}</Td>
+              <Td>{style}</Td>
             </Tr>
           ))}
         </Tbody>

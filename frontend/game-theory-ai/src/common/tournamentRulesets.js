@@ -1,6 +1,6 @@
-// common/rulesets.js
+// common/tournamentRulesets.js
 
-export const RULESETS = {
+export const TOUR_RULESETS = {
     'Reward cooperation': [[1, 1], [1, 0], [0, 1], [0, 0]],
     'Reward defection': [[0, 0], [0, 1], [1, 0], [1, 1]],
     'Reward mutual cooperation (1)': [[1, 1], [0, 1], [1, 0], [1, 1]],
