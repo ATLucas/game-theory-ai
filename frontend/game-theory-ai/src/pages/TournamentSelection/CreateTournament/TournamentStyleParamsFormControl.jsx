@@ -31,11 +31,10 @@ const TournamentStyleParamsFormControl = ({
         // Handle global parameters
         newParams[paramName] = value;
       } else {
-        // Handle per-round parameters
-        newParams.rounds[roundIndex] = {
-          ...newParams.rounds[roundIndex],
-          [paramName]: value
-        };
+        // Ensure the rounds object and specific round index are initialized
+        newParams.rounds = newParams.rounds || {};
+        newParams.rounds[roundIndex] = newParams.rounds[roundIndex] || {};
+        newParams.rounds[roundIndex][paramName] = value;
       }
       return newParams;
     });
