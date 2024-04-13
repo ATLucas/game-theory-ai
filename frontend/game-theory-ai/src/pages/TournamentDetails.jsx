@@ -1,16 +1,20 @@
 // pages/TournamentDetails.jsx
 
 import React from 'react';
-import { Button, Flex, Box } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Text } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
 const TournamentDetails = ({ tournament, onBack }) => {
   return (
     <Flex direction='column' height='100%' width='100%'>
       <Box p='10px'>
-        <Button onClick={onBack} colorScheme='teal' variant='ghost' size='lg'>
-          <ArrowBackIcon />
-        </Button>
+        <IconButton
+          onClick={onBack}
+          colorScheme='teal'
+          variant='ghost'
+          fontSize='3vh'
+          icon={<ArrowBackIcon />}
+        />
       </Box>
       <Flex
         direction='column'
@@ -21,7 +25,9 @@ const TournamentDetails = ({ tournament, onBack }) => {
         borderRadius='10px'
         borderColor='gray.200'
       >
-        <h1>{tournament} Details</h1>
+        <Text>
+          Tournament: <Text as="strong" display="inline">{tournament}</Text>
+        </Text>
       </Flex>
     </Flex>
   );

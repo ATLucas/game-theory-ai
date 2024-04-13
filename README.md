@@ -25,8 +25,8 @@
 
 ## TODO
 
-- BUG: Delete confirmation does not delete
-- BUG: Empty tournament name
+- REFACTOR: Split CreateTournamentModal into two or three files
+
 - PopulationSelector for each tournament, similar to TournamentSelector
 - StrategySelector for each population, similar to TournamentSelector
     - Tit for Tat

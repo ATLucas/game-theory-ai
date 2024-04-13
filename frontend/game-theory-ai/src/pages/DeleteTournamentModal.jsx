@@ -5,6 +5,7 @@ import {
     Button,
     Modal, ModalOverlay, ModalContent, ModalHeader,
     ModalFooter, ModalBody, ModalCloseButton,
+    Text,
 } from '@chakra-ui/react';
 
 const DeleteTournamentModal = ({ isOpen, onClose, onDelete, tournament }) => {
@@ -16,8 +17,13 @@ const DeleteTournamentModal = ({ isOpen, onClose, onDelete, tournament }) => {
         <ModalCloseButton />
         <ModalBody>
           {
-            tournament ? `Are you sure you want to delete "${tournament.name}"? This action cannot be undone.`
-            : 'Are you sure you want to delete this tournament? This action cannot be undone.'
+            tournament ? (
+              <Text>
+                Are you sure you want to delete <Text as="strong" display="inline">{tournament}</Text>?
+                <br/>
+                This action cannot be undone.
+              </Text>
+            ) : 'Are you sure you want to delete this tournament? This action cannot be undone.'
           }
         </ModalBody>
         <ModalFooter>
