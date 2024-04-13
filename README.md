@@ -25,18 +25,35 @@
 
 ## TODO
 
-- REFACTOR: Split CreateTournamentModal into two or three files
-
-- PopulationSelector for each tournament, similar to TournamentSelector
-- StrategySelector for each population, similar to TournamentSelector
+- StrategySelector
     - Tit for Tat
     - Always defect
     - Always cooperate
     - Tit for 2 Tats
-- Choose the count of players for each strategy in each population
-- Run the simulation
-- Display the final standings
-- Add strategy categories
-- Include category info in the final standings
-- Add a GPT-4 strategy
-- Add a Claude 3 strategy
+    - Others (see https://github.com/Axelrod-Python/Axelrod)
+    - GPT-4
+    - Claude 3
+- Round robin
+    - Choose strategies
+        - List of available strategies
+        - Choose to add one at a time or "add all"
+        - Select the quantity of players for each strategy
+    - Run the sim
+    - Display results:
+        - Standings: rank (avg points per turn), optimistic?, forgiving?, provokable?, clear?, avg points per turn, win percentage, loss percentage
+        - Sort by column
+        - Charts (TBD which)
+- Survival round robin
+    - Run the sim
+        - Multiple rounds
+        - Elimination logic
+    - Display results:
+        - Standings: rank (rounds survived, avg points per turn in last round), rounds survived, avg points per turn (per round and overall), win percentage (per round and overall), loss percentage (per round and overall)
+        - Sort by column
+        - Charts (TBD which)
+- Group round robin
+    - StrategySelector for each group
+    - Run the sim, taking into account group dynamics when matching players
+- Survival group round robin
+    - StrategySelector for each group in the first round
+    - Choose number of groups and/or number of players per group for each round

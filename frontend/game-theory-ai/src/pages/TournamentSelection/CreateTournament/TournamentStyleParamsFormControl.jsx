@@ -30,7 +30,7 @@ const TournamentStyleParamsFormControl = ({
   return (
     <Box border="1px solid gray" p={4} mt={4} borderRadius="md">
       <FormControl>
-        <FormLabel as='legend'>Style Parameters</FormLabel>
+        <FormLabel as='legend'>Parameters</FormLabel>
       </FormControl>
       {Object.keys(paramsConfig).map(paramName => {
         const { paramName: paramKey, paramType } = paramsConfig[paramName];
