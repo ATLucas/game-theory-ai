@@ -1,9 +1,14 @@
 // pages/TournamentSelectionTable.jsx
 
 import React from 'react';
-import { Box, Table, Thead, Tbody, Tr, Th, Td, useColorMode } from '@chakra-ui/react';
+import {
+  Box, IconButton,
+  Table, Thead, Tbody, Tr, Th, Td,
+  useColorMode,
+} from '@chakra-ui/react';
+import { CloseIcon } from '@chakra-ui/icons';
 
-const TournamentSelectionTable = ({ tournaments, onTournamentSelect }) => {
+const TournamentSelectionTable = ({ tournaments, onTournamentSelect, onTournamentDelete }) => {
   const { colorMode } = useColorMode();
 
   const selectionHoverColor = colorMode === 'light' ? 'teal.400' : 'teal.800';
@@ -23,10 +28,12 @@ const TournamentSelectionTable = ({ tournaments, onTournamentSelect }) => {
             <Th>Tournament Name</Th>
             <Th>Tournament Ruleset</Th>
             <Th>Tournament Style</Th>
+            <Th>Date Created</Th>
+            <Th>Delete</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {tournaments.map(({ name, ruleset, style }, index) => (
+          {tournaments.map(({ name, ruleset, style, dateCreated }, index) => (
             <Tr
               key={index}
               _hover={{ bg: selectionHoverColor, cursor: 'pointer' }}
@@ -35,6 +42,19 @@ const TournamentSelectionTable = ({ tournaments, onTournamentSelect }) => {
               <Td>{name}</Td>
               <Td>{ruleset}</Td>
               <Td>{style}</Td>
+              <Td>{new Date(dateCreated).toLocaleString()}</Td>
+              <Td>
+                <IconButton
+                  icon={<CloseIcon />}
+                  size="sm"
+                  colorScheme="red"
+                  aria-label="Delete Tournament"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering onTournamentSelect
+                    onTournamentDelete(name);
+                  }}
+                />
+              </Td>
             </Tr>
           ))}
         </Tbody>

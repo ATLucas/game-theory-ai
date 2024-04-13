@@ -25,7 +25,8 @@
 
 ## TODO
 
-- Choose per-style parameters
+- BUG: Delete confirmation does not delete
+- BUG: Empty tournament name
 - PopulationSelector for each tournament, similar to TournamentSelector
 - StrategySelector for each population, similar to TournamentSelector
     - Tit for Tat

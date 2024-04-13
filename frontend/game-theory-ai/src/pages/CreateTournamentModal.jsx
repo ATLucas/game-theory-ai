@@ -33,7 +33,7 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
     // Prevent the default form submit action
     event.preventDefault();
     if (validateForm()) {
-      onAddTournament(tournamentName, ruleset, style);
+      onAddTournament(tournamentName, ruleset, style, styleParams);
       resetForm();
     }
   };
