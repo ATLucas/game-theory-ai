@@ -1,20 +1,21 @@
 // pages/TournamentDetails.jsx
 
 import React from 'react';
-import { Box, Flex, IconButton, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
 const TournamentDetails = ({ tournament, onBack }) => {
   return (
     <Flex direction='column' height='100%' width='100%'>
       <Box p='10px'>
-        <IconButton
-          onClick={onBack}
+        <Button
+          leftIcon={<ArrowBackIcon />}
           colorScheme='teal'
           variant='ghost'
-          fontSize='3vh'
-          icon={<ArrowBackIcon />}
-        />
+          onClick={onBack} size='lg'
+        >
+          Tournament Chooser
+        </Button>
       </Box>
       <Flex
         direction='column'
