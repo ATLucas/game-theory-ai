@@ -18,10 +18,15 @@ const DEFAULT_RULESET_NAME = Object.keys(TOUR_RULESETS)[0];
 const DEFAULT_STYLE_NAME = Object.keys(TOUR_STYLES)[0];
 
 const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTournament }) => {
+  const initialStyleParams = {
+      global: {},
+      rounds: {}
+  };
+
   const [tournamentName, setTournamentName] = useState('');
   const [ruleset, setRuleset] = useState(DEFAULT_RULESET_NAME);
   const [style, setStyle] = useState(DEFAULT_STYLE_NAME);
-  const [styleParams, setStyleParams] = useState({});
+  const [styleParams, setStyleParams] = useState(initialStyleParams);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -53,40 +58,45 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
     updateErrors(value, "tournamentName");
   };
 
-  const updateErrors = (fieldValue, fieldName) => {
-    if (fieldValue.trim() === '') {
-      setErrors(prev => ({ ...prev, [fieldName]: 'This field is required' }));
-    } else {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[fieldName];
-        return newErrors;
-      });
-    }
+  const updateErrors = (fieldValue, fieldName, roundIndex = null) => {
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      const errorKey = roundIndex !== null ? `${fieldName}-${roundIndex}` : fieldName;
+
+      if (fieldValue.trim() === '') {
+        newErrors[errorKey] = 'This field is required';
+      } else {
+        delete newErrors[errorKey];
+      }
+
+      return newErrors;
+    });
   };
 
   const validateForm = () => {
     const newErrors = {};
-
+  
     // Check for empty name
-    if (tournamentName.trim() === '') {
+    if (!tournamentName.trim()) {
       newErrors.tournamentName = 'Tournament name must be specified';
     }
-
+  
     // Check for unique name
-    if (existingTournaments.some((tournament) => tournament.name === tournamentName.trim())) {
+    if (existingTournaments.some(tournament => tournament.name.trim() === tournamentName.trim())) {
       newErrors.tournamentName = 'Tournament name must be unique';
     }
-
+  
     // Check for required style parameters
-    Object.keys(TOUR_STYLES[style]).forEach(paramName => {
-      const { paramName: paramKey } = TOUR_STYLES[style][paramName];
-      if (!styleParams[paramKey] || styleParams[paramKey].trim() === '') {
-        newErrors[paramKey] = 'This field is required';
-      }
+    Object.keys(TOUR_STYLES[style]).forEach(section => {
+      Object.entries(TOUR_STYLES[style][section]).forEach(([paramName, paramDetails]) => {
+        const paramKey = paramDetails.paramName;
+        if (!styleParams[paramKey] || !styleParams[paramKey].trim()) {
+          newErrors[paramKey] = 'This field is required';
+        }
+      });
     });
-
-    setErrors(newErrors);
+  
+    setErrors(newErrors);  // Always update the errors state to reflect current validation results
     return Object.keys(newErrors).length === 0;
   };
 
