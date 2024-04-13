@@ -6,7 +6,7 @@ import { Button, VStack, useDisclosure } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
 // Internal
-import CreateTournamentModal from './CreateTournamentModal';
+import CreateTournamentModal from './CreateTournament/CreateTournamentModal';
 import DeleteTournamentModal from './DeleteTournamentModal';
 import TournamentSelectionTable from './TournamentSelectionTable';
 

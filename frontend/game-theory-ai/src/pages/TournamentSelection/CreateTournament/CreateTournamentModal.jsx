@@ -1,17 +1,18 @@
-// pages/CreateTournamentModal.jsx
+// pages/CreateTournament/CreateTournamentModal.jsx
 
 // External
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Button, FormControl, FormLabel, Input,
+  Button, FormControl, FormLabel, Input,
   Modal, ModalOverlay, ModalContent, ModalHeader,
   ModalCloseButton, ModalBody, ModalFooter,
-  NumberInput, NumberInputField, Select,
+  Select,
 } from '@chakra-ui/react';
 
 // Internal
-import { TOUR_RULESETS } from '../../common/tournamentRulesets';
-import { TOUR_STYLES } from '../../common/tournamentStyles';
+import TournamentStyleParamsFormControl from './TournamentStyleParamsFormControl';
+import { TOUR_RULESETS } from '../../../common/tournamentRulesets';
+import { TOUR_STYLES } from '../../../common/tournamentStyles';
 
 const DEFAULT_RULESET_NAME = Object.keys(TOUR_RULESETS)[0];
 const DEFAULT_STYLE_NAME = Object.keys(TOUR_STYLES)[0];
@@ -52,11 +53,6 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
     updateErrors(value, "tournamentName");
   };
 
-  const handleParamChange = (paramName, value) => {
-    setStyleParams(prev => ({ ...prev, [paramName]: value }));
-    updateErrors(value, paramName);
-  };
-
   const updateErrors = (fieldValue, fieldName) => {
     if (fieldValue.trim() === '') {
       setErrors(prev => ({ ...prev, [fieldName]: 'This field is required' }));
@@ -94,41 +90,6 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
     return Object.keys(newErrors).length === 0;
   };
 
-  const renderStyleParams = () => {
-    const params = TOUR_STYLES[style];
-    
-    // Check if there are parameters to display
-    if (Object.keys(params).length === 0) {
-      return null; // Don't render anything if there are no parameters
-    }
-
-    return (
-      <Box border="1px solid gray" p={4} mt={4} borderRadius="md">
-        <FormControl>
-          <FormLabel as='legend'>Style Parameters</FormLabel>
-        </FormControl>
-        {Object.keys(params).map(paramName => {
-          const { paramName: paramKey, paramType } = params[paramName];
-          return (
-            <FormControl key={paramKey} mt={4} isInvalid={!!errors[paramKey]}>
-              <FormLabel>{paramName}</FormLabel>
-              <NumberInput 
-                value={styleParams[paramKey] || ''} 
-                onChange={(value) => handleParamChange(paramKey, value)}
-                min={paramType === 'int' ? 1 : 0}
-                step={paramType === 'int' ? 1 : 0.1}
-                precision={paramType === 'int' ? 0 : 1}
-              >
-                <NumberInputField />
-              </NumberInput>
-              {errors[paramKey] && <p style={{ color: 'red' }}>{errors[paramKey]}</p>}
-            </FormControl>
-          );
-        })}
-      </Box>
-    );
-  };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -162,7 +123,13 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
               ))}
             </Select>
           </FormControl>
-          {renderStyleParams()}
+          <TournamentStyleParamsFormControl
+            tournamentStyle={style}
+            styleParams={styleParams}
+            setStyleParams={setStyleParams}
+            errors={errors}
+            updateErrors={updateErrors}
+          />
         </ModalBody>
         <ModalFooter>
           <Button type='submit' colorScheme='teal' mr={3} isDisabled={Object.keys(errors).length > 0}>
