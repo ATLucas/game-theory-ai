@@ -1,20 +1,12 @@
 // pages/CreateTournamentModal.jsx
 
 // External
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Select,
+  Button, FormControl, FormLabel, Input,
+  Modal, ModalOverlay, ModalContent, ModalHeader,
+  ModalCloseButton, ModalBody, ModalFooter,
+  NumberInput, NumberInputField, Select,
 } from '@chakra-ui/react';
 
 // Internal
@@ -28,6 +20,12 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
   const [tournamentName, setTournamentName] = useState('');
   const [ruleset, setRuleset] = useState(DEFAULT_RULESET_NAME);
   const [style, setStyle] = useState(DEFAULT_STYLE_NAME);
+  const [styleParams, setStyleParams] = useState({});
+
+  useEffect(() => {
+    // Reset style parameters when the style changes
+    setStyleParams({});
+  }, [style]);
 
   const handleCreate = (event) => {
     // Prevent the default form submit action
@@ -39,8 +37,34 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
       setTournamentName('');
       setRuleset(DEFAULT_RULESET_NAME);
       setStyle(DEFAULT_STYLE_NAME);
+      setStyleParams({});
       onClose();
     }
+  };
+
+  const handleParamChange = (paramName, value) => {
+    setStyleParams(prev => ({ ...prev, [paramName]: value }));
+  };
+
+  const renderStyleParams = () => {
+    const params = TOUR_STYLES[style];
+    return Object.keys(params).map(paramName => {
+      const { paramName: paramKey, paramType } = params[paramName];
+      return (
+        <FormControl key={paramKey} mt={4}>
+          <FormLabel>{paramName}</FormLabel>
+          <NumberInput 
+            value={styleParams[paramKey] || ''} 
+            onChange={(value) => handleParamChange(paramKey, value)}
+            min={paramType === 'int' ? 1 : 0.00}
+            step={paramType === 'int' ? 1 : 0.01}
+            precision={paramType === 'int' ? 0 : 1}
+          >
+            <NumberInputField />
+          </NumberInput>
+        </FormControl>
+      );
+    });
   };
 
   return (
@@ -75,6 +99,7 @@ const CreateTournamentModal = ({ isOpen, onClose, onAddTournament }) => {
               ))}
             </Select>
           </FormControl>
+          {renderStyleParams()}
         </ModalBody>
         <ModalFooter>
           <Button type='submit' colorScheme='teal' mr={3}>

@@ -1,20 +1,19 @@
 // common/tournamentStyles.js
 
 export const TOUR_STYLES = {
-  'Round robin': {
-    numMatchups: "int", // How many times will a given player play every other player
-  },
+  'Round robin': {},
   'Multi-round round robin': {
-    numRounds: "int", // Number of rounds
+    'Number of rounds': { paramName: 'numRounds', paramType: 'int' },
+    'Per-round elimination percentage': { paramName: 'elimPercent', paramType: 'float' },
   },
   'World Cup': {
-    numGroups: "int", // How many groups
-    groupSize: "int", // How many players per group
+    'Number of groups': { paramName: 'numGroups', paramType: 'int' },
+    'Number of players per group': { paramName: 'groupSize', paramType: 'int' },
   },
   'Multi-round group round robin': {
-    numGroups: "int", // How many groups
-    groupSize: "int", // How many players per group
-    groupChance: "float", // How likely is a player to be matched with a player from the same group
-    elimChance: "float", // How many players are eliminated per round
+    'Number of groups': { paramName: 'numGroups', paramType: 'int' },
+    'Number of players per group': { paramName: 'groupSize', paramType: 'int' },
+    'Chance of matching with a player in the same group': { paramName: 'groupChance', paramType: 'float' },
+    'Per-round elimination percentage': { paramName: 'elimPercent', paramType: 'float' },
   },
 }
