@@ -40,17 +40,17 @@ const TournamentStyleParamsFormControl = ({
     updateErrors(value, paramKey, roundIndex);
   };
 
-  const getFlatParamKey = (fieldName, roundIndex) => (
-    roundIndex !== null ? `round${roundIndex}-${fieldName}` : `global-${fieldName}`
+  const getErrorKey = (paramKey, roundIndex) => (
+    roundIndex !== null ? `round${roundIndex}-${paramKey}` : `global-${paramKey}`
   );
 
   const renderParams = (paramsConfig, roundIndex = null) => {
     return Object.keys(paramsConfig).map(paramKey => {
       const { paramLabel, paramType } = paramsConfig[paramKey];
       const value = roundIndex === null ? styleParams.global[paramKey] || '' : styleParams.rounds?.[roundIndex]?.[paramKey] || '';
-      const flatParamKey = getFlatParamKey(paramKey, roundIndex);
+      const errorKey = getErrorKey(paramKey, roundIndex);
       return (
-        <FormControl key={flatParamKey} mt={4} isInvalid={!!errors[paramKey]}>
+        <FormControl key={errorKey} mt={4} isInvalid={!!errors[errorKey]}>
           <FormLabel>{paramLabel}</FormLabel>
           <NumberInput
             value={value}
@@ -61,7 +61,7 @@ const TournamentStyleParamsFormControl = ({
           >
             <NumberInputField />
           </NumberInput>
-          {errors[paramKey] && <p style={{ color: 'red' }}>{errors[paramKey]}</p>}
+          {errors[errorKey] && <p style={{ color: 'red' }}>{errors[errorKey]}</p>}
         </FormControl>
       );
     });

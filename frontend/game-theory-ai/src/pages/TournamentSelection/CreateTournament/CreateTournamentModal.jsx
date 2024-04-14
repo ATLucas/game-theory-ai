@@ -21,18 +21,12 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
   const [tournamentName, setTournamentName] = useState('');
   const [ruleset, setRuleset] = useState(DEFAULT_RULESET_NAME);
   const [style, setStyle] = useState(DEFAULT_STYLE_NAME);
-  const [styleParams, setStyleParams] = useState({
-    global: {},
-    rounds: {},
-  });
+  const [styleParams, setStyleParams] = useState({ global: {}, rounds: {} });
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     // Reset style parameters when the style changes
-    setStyleParams({
-      global: {},
-      rounds: {},
-    });
+    setStyleParams({ global: {}, rounds: {} });
     setErrors({});
   }, [style]);
 
@@ -49,67 +43,67 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
     setTournamentName('');
     setRuleset(DEFAULT_RULESET_NAME);
     setStyle(DEFAULT_STYLE_NAME);
-    setStyleParams({
-      global: {},
-      rounds: {},
-    });
+    setStyleParams({ global: {}, rounds: {} });
     setErrors({});
     onClose();
   };
 
   const handleTournamentNameChange = (value) => {
     setTournamentName(value);
-    updateErrors("tournamentName", value);
+    updateErrors(value, "tournamentName");
   };
 
-  const getFlatParamKey = (fieldName, roundIndex) => (
-    roundIndex !== null ? `round${roundIndex}-${fieldName}` : `global-${fieldName}`
+  const getErrorKey = (paramKey, roundIndex) => (
+    roundIndex ? `round${roundIndex}-${paramKey}` : `global-${paramKey}`
   );
 
+  const tourNameErrorKey = getErrorKey("tournamentName");
+
   const updateErrors = (paramValue, paramKey, roundIndex = null) => {
-    // setErrors(prev => {
-    //   const newErrors = { ...prev };
-    //   const errorKey = getErrorKey(fieldName, roundIndex);
+    console.log(`paramValue: ${paramValue}, paramKey: ${paramKey}`);
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      const errorKey = getErrorKey(paramKey, roundIndex);
 
-    //   if (fieldValue.trim() === '') {
-    //     newErrors[errorKey] = 'This field is required';
-    //   } else {
-    //     delete newErrors[errorKey];
-    //   }
+      if (paramValue.trim() === '') {
+        newErrors[errorKey] = 'This field is required';
+      } else {
+        delete newErrors[errorKey];
+      }
 
-    //   return newErrors;
-    // });
+      console.log(`updateErrors: newErrors: ${JSON.stringify(newErrors)}`);
+      return newErrors;
+    });
   };
 
   const validateForm = () => {
     const newErrors = {};
   
-    // // Check for empty name
-    // if (!tournamentName.trim()) {
-    //   newErrors.tournamentName = 'Tournament name must be specified';
-    // }
+    // Check for empty name
+    if (!tournamentName.trim()) {
+      newErrors[tourNameErrorKey] = 'Tournament name must be specified';
+    }
   
-    // // Check for unique name
-    // if (existingTournaments.some(tournament => tournament.name.trim() === tournamentName.trim())) {
-    //   newErrors.tournamentName = 'Tournament name must be unique';
-    // }
+    // Check for unique name
+    if (existingTournaments.some(tournament => tournament.name.trim() === tournamentName.trim())) {
+      newErrors[tourNameErrorKey] = 'Tournament name must be unique';
+    }
   
-    // // Check for required style parameters
-    // Object.keys(TOUR_STYLES[style]).forEach(section => {
-    //   Object.entries(TOUR_STYLES[style][section]).forEach(([paramDisplayString, paramDetails]) => {
-    //     const paramKey = paramDetails.paramName;
-    //     if (section === "perRound") {
-
-    //     }
-    //     const errorKey = getErrorKey(paramDetails.paramName, roundIndex ? section == "perRound" : null);
+    // Check for required style parameters
+    Object.keys(TOUR_STYLES[style].global).forEach((paramKey) => {
+      const errorKey = getErrorKey(paramKey);
+      if (!styleParams.global[paramKey] || !styleParams.global[paramKey].trim()) {
+        newErrors[errorKey] = 'This field is required';
+      }
+    });
+    if (TOUR_STYLES[style]?.perRound) {
+      Object.keys(TOUR_STYLES[style].perRound).forEach((paramKey) => {
         
-    //     if (!styleParams[paramKey] || !styleParams[paramKey].trim()) {
-    //       newErrors[errorKey] = 'This field is required';
-    //     }
-    //   });
-    // });
+      });
+    }
   
-    // setErrors(newErrors);  // Always update the errors state to reflect current validation results
+    console.log(`validateForm: newErrors: ${JSON.stringify(newErrors)}`);
+    setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
@@ -128,7 +122,7 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
               placeholder='Enter tournament name'
               autoFocus
             />
-            {errors.tournamentName && <p style={{ color: 'red' }}>{errors.tournamentName}</p>}
+            {errors[tourNameErrorKey] && <p style={{ color: 'red' }}>{errors[tourNameErrorKey]}</p>}
           </FormControl>
           <FormControl mt={4}>
             <FormLabel>Ruleset</FormLabel>
