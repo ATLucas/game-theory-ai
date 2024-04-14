@@ -16,38 +16,42 @@ const TournamentStyleParamsFormControl = ({
   updateErrors,
 }) => {
   const styleConfig = TOUR_STYLES[tournamentStyle];
-  const globalParamsConfig = styleConfig?.global || {};
-  const perRoundParamsConfig = styleConfig?.perRound || {};
   
   // Check if there are parameters to display
-  if (Object.keys(globalParamsConfig).length === 0) {
+  if (Object.keys(styleConfig.global).length === 0) {
     return null; // Don't render anything if there are no parameters
   }
 
-  const handleParamChange = (paramName, value, roundIndex = null) => {
+  const handleParamChange = (paramKey, value, roundIndex = null) => {
     setStyleParams(prev => {
       const newParams = { ...prev };
       if (roundIndex === null) {
         // Handle global parameters
-        newParams[paramName] = value;
+        newParams.global = newParams.global || {};
+        newParams.global[paramKey] = value;
       } else {
         // Ensure the rounds object and specific round index are initialized
         newParams.rounds = newParams.rounds || {};
         newParams.rounds[roundIndex] = newParams.rounds[roundIndex] || {};
-        newParams.rounds[roundIndex][paramName] = value;
+        newParams.rounds[roundIndex][paramKey] = value;
       }
       return newParams;
     });
-    updateErrors(value, paramName, roundIndex);
+    updateErrors(value, paramKey, roundIndex);
   };
 
+  const getFlatParamKey = (fieldName, roundIndex) => (
+    roundIndex !== null ? `round${roundIndex}-${fieldName}` : `global-${fieldName}`
+  );
+
   const renderParams = (paramsConfig, roundIndex = null) => {
-    return Object.keys(paramsConfig).map(paramName => {
-      const { paramName: paramKey, paramType } = paramsConfig[paramName];
-      const value = roundIndex === null ? styleParams[paramKey] || '' : styleParams.rounds?.[roundIndex]?.[paramKey] || '';
+    return Object.keys(paramsConfig).map(paramKey => {
+      const { paramLabel, paramType } = paramsConfig[paramKey];
+      const value = roundIndex === null ? styleParams.global[paramKey] || '' : styleParams.rounds?.[roundIndex]?.[paramKey] || '';
+      const flatParamKey = getFlatParamKey(paramKey, roundIndex);
       return (
-        <FormControl key={`${paramKey}-${roundIndex}`} mt={4} isInvalid={!!errors[paramKey]}>
-          <FormLabel>{paramName}</FormLabel>
+        <FormControl key={flatParamKey} mt={4} isInvalid={!!errors[paramKey]}>
+          <FormLabel>{paramLabel}</FormLabel>
           <NumberInput
             value={value}
             onChange={value => handleParamChange(paramKey, value, roundIndex)}
@@ -65,20 +69,20 @@ const TournamentStyleParamsFormControl = ({
 
   return (
     <VStack spacing={4} border="1px solid gray" p={4} mt={4} borderRadius="md">
-      {Object.keys(globalParamsConfig).length > 0 && (
+      {Object.keys(styleConfig.global).length > 0 && (
         <>
           <FormControl>
-            <FormLabel as='legend'>Global Parameters</FormLabel>
+            <FormLabel as='legend'>Parameters</FormLabel>
           </FormControl>
-          {renderParams(globalParamsConfig)}
+          {renderParams(styleConfig.global)}
         </>
       )}
-      {styleParams.numRounds && Object.keys(perRoundParamsConfig).length > 0 && Array.from({ length: styleParams.numRounds }, (_, i) => (
+      {styleParams.global.numRounds && Object.keys(styleConfig.perRound).length > 0 && Array.from({ length: styleParams.global.numRounds }, (_, i) => (
         <Box key={i} border="1px dashed gray" p={4} mt={4} borderRadius="md">
           <FormControl>
             <FormLabel as='legend'>{`Round ${i + 1} Parameters`}</FormLabel>
           </FormControl>
-          {renderParams(perRoundParamsConfig, i)}
+          {renderParams(styleConfig.perRound, i)}
         </Box>
       ))}
     </VStack>

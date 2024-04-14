@@ -18,20 +18,21 @@ const DEFAULT_RULESET_NAME = Object.keys(TOUR_RULESETS)[0];
 const DEFAULT_STYLE_NAME = Object.keys(TOUR_STYLES)[0];
 
 const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTournament }) => {
-  const initialStyleParams = {
-      global: {},
-      rounds: {}
-  };
-
   const [tournamentName, setTournamentName] = useState('');
   const [ruleset, setRuleset] = useState(DEFAULT_RULESET_NAME);
   const [style, setStyle] = useState(DEFAULT_STYLE_NAME);
-  const [styleParams, setStyleParams] = useState(initialStyleParams);
+  const [styleParams, setStyleParams] = useState({
+    global: {},
+    rounds: {},
+  });
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     // Reset style parameters when the style changes
-    setStyleParams({});
+    setStyleParams({
+      global: {},
+      rounds: {},
+    });
     setErrors({});
   }, [style]);
 
@@ -48,55 +49,67 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
     setTournamentName('');
     setRuleset(DEFAULT_RULESET_NAME);
     setStyle(DEFAULT_STYLE_NAME);
-    setStyleParams({});
+    setStyleParams({
+      global: {},
+      rounds: {},
+    });
     setErrors({});
     onClose();
   };
 
   const handleTournamentNameChange = (value) => {
     setTournamentName(value);
-    updateErrors(value, "tournamentName");
+    updateErrors("tournamentName", value);
   };
 
-  const updateErrors = (fieldValue, fieldName, roundIndex = null) => {
-    setErrors(prev => {
-      const newErrors = { ...prev };
-      const errorKey = roundIndex !== null ? `${fieldName}-${roundIndex}` : fieldName;
+  const getFlatParamKey = (fieldName, roundIndex) => (
+    roundIndex !== null ? `round${roundIndex}-${fieldName}` : `global-${fieldName}`
+  );
 
-      if (fieldValue.trim() === '') {
-        newErrors[errorKey] = 'This field is required';
-      } else {
-        delete newErrors[errorKey];
-      }
+  const updateErrors = (paramValue, paramKey, roundIndex = null) => {
+    // setErrors(prev => {
+    //   const newErrors = { ...prev };
+    //   const errorKey = getErrorKey(fieldName, roundIndex);
 
-      return newErrors;
-    });
+    //   if (fieldValue.trim() === '') {
+    //     newErrors[errorKey] = 'This field is required';
+    //   } else {
+    //     delete newErrors[errorKey];
+    //   }
+
+    //   return newErrors;
+    // });
   };
 
   const validateForm = () => {
     const newErrors = {};
   
-    // Check for empty name
-    if (!tournamentName.trim()) {
-      newErrors.tournamentName = 'Tournament name must be specified';
-    }
+    // // Check for empty name
+    // if (!tournamentName.trim()) {
+    //   newErrors.tournamentName = 'Tournament name must be specified';
+    // }
   
-    // Check for unique name
-    if (existingTournaments.some(tournament => tournament.name.trim() === tournamentName.trim())) {
-      newErrors.tournamentName = 'Tournament name must be unique';
-    }
+    // // Check for unique name
+    // if (existingTournaments.some(tournament => tournament.name.trim() === tournamentName.trim())) {
+    //   newErrors.tournamentName = 'Tournament name must be unique';
+    // }
   
-    // Check for required style parameters
-    Object.keys(TOUR_STYLES[style]).forEach(section => {
-      Object.entries(TOUR_STYLES[style][section]).forEach(([paramName, paramDetails]) => {
-        const paramKey = paramDetails.paramName;
-        if (!styleParams[paramKey] || !styleParams[paramKey].trim()) {
-          newErrors[paramKey] = 'This field is required';
-        }
-      });
-    });
+    // // Check for required style parameters
+    // Object.keys(TOUR_STYLES[style]).forEach(section => {
+    //   Object.entries(TOUR_STYLES[style][section]).forEach(([paramDisplayString, paramDetails]) => {
+    //     const paramKey = paramDetails.paramName;
+    //     if (section === "perRound") {
+
+    //     }
+    //     const errorKey = getErrorKey(paramDetails.paramName, roundIndex ? section == "perRound" : null);
+        
+    //     if (!styleParams[paramKey] || !styleParams[paramKey].trim()) {
+    //       newErrors[errorKey] = 'This field is required';
+    //     }
+    //   });
+    // });
   
-    setErrors(newErrors);  // Always update the errors state to reflect current validation results
+    // setErrors(newErrors);  // Always update the errors state to reflect current validation results
     return Object.keys(newErrors).length === 0;
   };
 

@@ -3,37 +3,37 @@
 export const TOUR_STYLES = {
   'Round robin': {
     global: {
-      'Number of players': { paramName: 'numPlayers', paramType: 'int' },
-      'Turns per game': { paramName: 'numTurns', paramType: 'int' },
+      numPlayers: { paramLabel: 'Number of players', paramType: 'int' },
+      numTurns: { paramLabel: 'Turns per game', paramType: 'int' },
     },
   },
   'Survival round robin': {
     global: {
-      'Number of rounds': { paramName: 'numRounds', paramType: 'int' },
+      numRounds: { paramLabel: 'Number of rounds', paramType: 'int' },
     },
     perRound: {
-      'Turns per game': { paramName: 'numTurns', paramType: 'int' },
-      'Elimination percentage': { paramName: 'elimPercent', paramType: 'float' },
+      numTurns: { paramLabel: 'Turns per game', paramType: 'int' },
+      elimPercent: { paramLabel: 'Elimination percentage', paramType: 'float' },
     },
   },
   'Group round robin': {
     global: {
-      'Number of groups': { paramName: 'numGroups', paramType: 'int' },
-      'Number of players per group': { paramName: 'groupSize', paramType: 'int' },
-      'Chance of matching with a player in the same group': { paramName: 'groupChance', paramType: 'float' },
-      'Turns per game': { paramName: 'numTurns', paramType: 'int' },
+      numGroups: { paramLabel: 'Number of groups', paramType: 'int' },
+      groupSize: { paramLabel: 'Number of players per group', paramType: 'int' },
+      groupChance: { paramLabel: 'Chance of matching within group', paramType: 'float' },
+      numTurns: { paramLabel: 'Turns per game', paramType: 'int' },
     },
   },
   'Survival group round robin': {
     global: {
-      'Number of rounds': { paramName: 'numRounds', paramType: 'int' },
+      numRounds: { paramLabel: 'Number of rounds', paramType: 'int' },
     },
     perRound: {
-      'Turns per game': { paramName: 'numTurns', paramType: 'int' },
-      'Elimination percentage': { paramName: 'elimPercent', paramType: 'float' },
-      'Number of groups': { paramName: 'numGroups', paramType: 'int' },
-      'Number of players per group': { paramName: 'groupSize', paramType: 'int' },
-      'Chance of matching with a player in the same group': { paramName: 'groupChance', paramType: 'float' },
+      numTurns: { paramLabel: 'Turns per game', paramType: 'int' },
+      elimPercent: { paramLabel: 'Elimination percentage', paramType: 'float' },
+      numGroups: { paramLabel: 'Number of groups', paramType: 'int' },
+      groupSize: { paramLabel: 'Number of players per group', paramType: 'int' },
+      groupChance: { paramLabel: 'Chance of matching within group', paramType: 'float' },
     },
   },
 }
