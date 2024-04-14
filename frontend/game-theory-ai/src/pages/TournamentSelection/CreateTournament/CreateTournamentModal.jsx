@@ -60,7 +60,7 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
   const tourNameErrorKey = getErrorKey("tournamentName");
 
   const updateErrors = (paramValue, paramKey, roundIndex = null) => {
-    console.log(`paramValue: ${paramValue}, paramKey: ${paramKey}`);
+    console.log(`updateErrors: paramValue: ${paramValue}, paramKey: ${paramKey}`);
     setErrors(prev => {
       const newErrors = { ...prev };
       const errorKey = getErrorKey(paramKey, roundIndex);
@@ -88,17 +88,26 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
     if (existingTournaments.some(tournament => tournament.name.trim() === tournamentName.trim())) {
       newErrors[tourNameErrorKey] = 'Tournament name must be unique';
     }
-  
-    // Check for required style parameters
+
+    // Check global required parameters
     Object.keys(TOUR_STYLES[style].global).forEach((paramKey) => {
       const errorKey = getErrorKey(paramKey);
       if (!styleParams.global[paramKey] || !styleParams.global[paramKey].trim()) {
         newErrors[errorKey] = 'This field is required';
       }
     });
+
+    // Check per-round required parameters
     if (TOUR_STYLES[style]?.perRound) {
-      Object.keys(TOUR_STYLES[style].perRound).forEach((paramKey) => {
-        
+      Array.from({ length: TOUR_STYLES[style].global.numRounds }, (_, item) => item).forEach(i => {
+        Object.keys(TOUR_STYLES[style].perRound).forEach((paramKey) => {
+          const errorKey = getErrorKey(paramKey, i);
+          console.log(`errorKey: ${errorKey}`);
+          console.log(`styleParams.rounds[i][paramKey]: ${styleParams.rounds[i][paramKey]}`);
+          if (!styleParams.rounds[i][paramKey] || !styleParams.rounds[i][paramKey].trim()) {
+            newErrors[errorKey] = 'This field is required';
+          }
+        });
       });
     }
   

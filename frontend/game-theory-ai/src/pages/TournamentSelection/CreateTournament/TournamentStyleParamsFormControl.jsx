@@ -41,7 +41,7 @@ const TournamentStyleParamsFormControl = ({
   };
 
   const getErrorKey = (paramKey, roundIndex) => (
-    roundIndex !== null ? `round${roundIndex}-${paramKey}` : `global-${paramKey}`
+    roundIndex ? `round${roundIndex}-${paramKey}` : `global-${paramKey}`
   );
 
   const renderParams = (paramsConfig, roundIndex = null) => {
