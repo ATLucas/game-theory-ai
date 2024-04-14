@@ -6,6 +6,7 @@ import {
 } from '@chakra-ui/react';
 
 // Internal
+import { getErrorKey } from './utils.js';
 import { TOUR_STYLES } from '../../../common/tournamentStyles';
 
 const TournamentStyleParamsFormControl = ({
@@ -27,28 +28,22 @@ const TournamentStyleParamsFormControl = ({
       const newParams = { ...prev };
       if (roundIndex === null) {
         // Handle global parameters
-        newParams.global = newParams.global || {};
         newParams.global[paramKey] = value;
       } else {
         // Ensure the rounds object and specific round index are initialized
-        newParams.rounds = newParams.rounds || {};
         newParams.rounds[roundIndex] = newParams.rounds[roundIndex] || {};
         newParams.rounds[roundIndex][paramKey] = value;
       }
       return newParams;
     });
-    updateErrors(value, paramKey, roundIndex);
+    updateErrors(value, paramKey, roundIndex + 1);
   };
-
-  const getErrorKey = (paramKey, roundIndex) => (
-    roundIndex ? `round${roundIndex}-${paramKey}` : `global-${paramKey}`
-  );
 
   const renderParams = (paramsConfig, roundIndex = null) => {
     return Object.keys(paramsConfig).map(paramKey => {
       const { paramLabel, paramType } = paramsConfig[paramKey];
       const value = roundIndex === null ? styleParams.global[paramKey] || '' : styleParams.rounds?.[roundIndex]?.[paramKey] || '';
-      const errorKey = getErrorKey(paramKey, roundIndex);
+      const errorKey = getErrorKey(paramKey, roundIndex + 1);
       return (
         <FormControl key={errorKey} mt={4} isInvalid={!!errors[errorKey]}>
           <FormLabel>{paramLabel}</FormLabel>

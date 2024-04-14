@@ -11,6 +11,7 @@ import {
 
 // Internal
 import TournamentStyleParamsFormControl from './TournamentStyleParamsFormControl';
+import { getErrorKey } from './utils.js';
 import { TOUR_RULESETS } from '../../../common/tournamentRulesets';
 import { TOUR_STYLES } from '../../../common/tournamentStyles';
 
@@ -53,17 +54,12 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
     updateErrors(value, "tournamentName");
   };
 
-  const getErrorKey = (paramKey, roundIndex) => (
-    roundIndex ? `round${roundIndex}-${paramKey}` : `global-${paramKey}`
-  );
-
   const tourNameErrorKey = getErrorKey("tournamentName");
 
-  const updateErrors = (paramValue, paramKey, roundIndex = null) => {
-    console.log(`updateErrors: paramValue: ${paramValue}, paramKey: ${paramKey}`);
+  const updateErrors = (paramValue, paramKey, round = null) => {
     setErrors(prev => {
       const newErrors = { ...prev };
-      const errorKey = getErrorKey(paramKey, roundIndex);
+      const errorKey = getErrorKey(paramKey, round);
 
       if (paramValue.trim() === '') {
         newErrors[errorKey] = 'This field is required';
@@ -71,7 +67,6 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
         delete newErrors[errorKey];
       }
 
-      console.log(`updateErrors: newErrors: ${JSON.stringify(newErrors)}`);
       return newErrors;
     });
   };
@@ -99,19 +94,17 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
 
     // Check per-round required parameters
     if (TOUR_STYLES[style]?.perRound) {
-      Array.from({ length: TOUR_STYLES[style].global.numRounds }, (_, item) => item).forEach(i => {
+      Array.from({ length: styleParams.global.numRounds }, (_, item) => item).forEach(i => {
         Object.keys(TOUR_STYLES[style].perRound).forEach((paramKey) => {
-          const errorKey = getErrorKey(paramKey, i);
-          console.log(`errorKey: ${errorKey}`);
-          console.log(`styleParams.rounds[i][paramKey]: ${styleParams.rounds[i][paramKey]}`);
-          if (!styleParams.rounds[i][paramKey] || !styleParams.rounds[i][paramKey].trim()) {
+          const errorKey = getErrorKey(paramKey, i + 1);
+          const paramValue = styleParams.rounds?.[i]?.[paramKey]
+          if (!paramValue || !paramValue.trim()) {
             newErrors[errorKey] = 'This field is required';
           }
         });
       });
     }
   
-    console.log(`validateForm: newErrors: ${JSON.stringify(newErrors)}`);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
