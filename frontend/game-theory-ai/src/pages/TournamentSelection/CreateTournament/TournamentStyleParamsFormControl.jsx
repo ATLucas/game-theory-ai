@@ -36,14 +36,14 @@ const TournamentStyleParamsFormControl = ({
       }
       return newParams;
     });
-    updateErrors(value, paramKey, roundIndex + 1);
+    updateErrors(value, paramKey, roundIndex !== null ? roundIndex + 1 : null);
   };
 
   const renderParams = (paramsConfig, roundIndex = null) => {
     return Object.keys(paramsConfig).map(paramKey => {
       const { paramLabel, paramType } = paramsConfig[paramKey];
       const value = roundIndex === null ? styleParams.global[paramKey] || '' : styleParams.rounds?.[roundIndex]?.[paramKey] || '';
-      const errorKey = getErrorKey(paramKey, roundIndex + 1);
+      const errorKey = getErrorKey(paramKey, roundIndex !== null ? roundIndex + 1 : null);
       return (
         <FormControl key={errorKey} mt={4} isInvalid={!!errors[errorKey]}>
           <FormLabel>{paramLabel}</FormLabel>
