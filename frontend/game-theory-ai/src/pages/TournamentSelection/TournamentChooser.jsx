@@ -15,12 +15,6 @@ const TournamentChooser = ({ tournaments, setTournaments, setSelectedTournament 
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [tournamentToDelete, setTournamentToDelete] = useState(null);
 
-  const addTournament = (name, ruleset, style, styleParams) => {
-    setTournaments([...tournaments, {
-      name, ruleset, style, styleParams, dateCreated: new Date(),
-    }]);
-  };
-
   const confirmDeleteTournament = (tournament) => {
     console.log(`Opening modal to delete tournament: ${tournament}`);
     setTournamentToDelete(tournament);
@@ -48,7 +42,7 @@ const TournamentChooser = ({ tournaments, setTournaments, setSelectedTournament 
         existingTournaments={tournaments}
         isOpen={isOpen}
         onClose={onClose}
-        onAddTournament={addTournament}
+        setTournaments={setTournaments}
       />
       <DeleteTournamentModal
         isOpen={isDeleteModalOpen}

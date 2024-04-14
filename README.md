@@ -25,7 +25,8 @@
 
 ## TODO
 
-- Configure the per-round params
+- BUG: When "Create" is clicked with empty fields, the empty fields are not marked as errors, and the "Create" button stays disabled forever
+
 - PlayerChooser (like TournamentChooser)
     - Count of players chosen vs players needed
     - Display chosen strategies in alphabetical order in a table with strat and player count

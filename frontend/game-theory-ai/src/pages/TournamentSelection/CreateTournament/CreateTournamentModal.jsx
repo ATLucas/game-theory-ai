@@ -8,6 +8,7 @@ import {
   ModalCloseButton, ModalBody, ModalFooter,
   Select,
 } from '@chakra-ui/react';
+import cloneDeep from 'lodash/cloneDeep';
 
 // Internal
 import TournamentStyleParamsFormControl from './TournamentStyleParamsFormControl';
@@ -18,7 +19,7 @@ import { TOUR_STYLES } from '../../../common/tournamentStyles';
 const DEFAULT_RULESET_NAME = Object.keys(TOUR_RULESETS)[0];
 const DEFAULT_STYLE_NAME = Object.keys(TOUR_STYLES)[0];
 
-const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTournament }) => {
+const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, setTournaments }) => {
   const [tournamentName, setTournamentName] = useState('');
   const [ruleset, setRuleset] = useState(DEFAULT_RULESET_NAME);
   const [style, setStyle] = useState(DEFAULT_STYLE_NAME);
@@ -35,7 +36,10 @@ const CreateTournamentModal = ({ existingTournaments, isOpen, onClose, onAddTour
     // Prevent the default form submit action
     event.preventDefault();
     if (validateForm()) {
-      onAddTournament(tournamentName.trim(), ruleset, style, styleParams);
+      const safeStyleParams = cloneDeep(styleParams);
+      setTournaments(prevTournaments => [...prevTournaments, {
+        name: tournamentName.trim(), ruleset, style, styleParams: safeStyleParams, dateCreated: new Date(),
+      }]);
       resetForm();
     }
   };
